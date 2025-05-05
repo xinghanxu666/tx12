@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+}
+
+group = 'com'
+version = '2.1.0.4'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+}
+
+def targetJavaVersion = 17  // 将Java版本从22修改为17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion  // 使用JavaVersion对象来设置兼容性
+    targetCompatibility = javaVersion  // 使用JavaVersion对象来设置兼容性
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}

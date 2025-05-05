@@ -1,0 +1,12 @@
+name: tx12
+version: 2.1.0.4
+main: com.tx12.tx12
+api-version: 1.21
+description: 云黑名单管理系统
+commands:
+  blacklist:
+    description: 管理云端黑名单
+    aliases: [bl]
+    usage: /blacklist [pull|list|awa|help]
+config:
+  blacklist-url: "https://mc-blacklist.087654.xyz/blacklist.json"
